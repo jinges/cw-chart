@@ -15,10 +15,10 @@ export default class DrawCircle {
     this.arrText = ['正   确', '半   对', '错   误', '待批改']
 
     this.dataCount();
-    this.formatParams(outer_colors, this.canvas.width / 2 - 260);
-    this.formatParams(inner_colors, this.canvas.width / 2 - 320);
+    this.formatParams(this.outer_colors, this.canvas.width / 2 - 260);
+    this.formatParams(this.inner_colors, this.canvas.width / 2 - 320);
     this.drawCircle('#2c333d', 0, 1, this.canvas.width / 2 - 360);
-    this.drawText(outer_colors)
+    this.drawText(this.outer_colors)
   }
 
   drawText(colors) {
