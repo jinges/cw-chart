@@ -1,13 +1,4 @@
 export default class DrawCircle {
-  outer_colors = ['#52cc8f', '#5499cc', '#ff6969', '#ffc869']
-  inner_colors = ['#219c4b', '#22559c', '#ff2e2e', '#ff952e']
-  start = 0;
-  count = 0;
-  x = 0;
-  y = 0;
-  arrText = ['正   确', '半   对', '错   误', '待批改']
-
-
   constructor(id, data) {
     this.canvas = document.querySelector(id)
     this.ctx = this.canvas.getContext('2d')
@@ -17,6 +8,13 @@ export default class DrawCircle {
     this.canvas.height = width;
     this.x = width / 2 - 160;
     this.y = width / 2 - 160
+    this.outer_colors = ['#52cc8f', '#5499cc', '#ff6969', '#ffc869']
+    this.inner_colors = ['#219c4b', '#22559c', '#ff2e2e', '#ff952e']
+    this.start = 0;
+    this.count = 0;
+    this.x = 0;
+    this.y = 0;
+    this.arrText = ['正   确', '半   对', '错   误', '待批改']
     this.init();
   }
 
