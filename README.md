@@ -10,7 +10,7 @@
 安装
 ---
 
-```
+```javascript
  npm install cw-circle
 ```
 
