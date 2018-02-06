@@ -1,57 +1,75 @@
 export default class DrawCircle {
-  constructor(id, data) {
-    this.canvas = document.querySelector(id)
+
+
+  constructor(obj) {
+    if (!obj.id || !obj.data || !obj.accuracy) {
+      alert('传入参数有误')
+      return;
+    }
+    this.canvas = document.querySelector(obj.id)
     this.ctx = this.canvas.getContext('2d')
-    this.data = data;
-    const width = window.innerWidth;
-    this.canvas.width = width;
-    this.canvas.height = width;
-    this.x = width / 2 - 160;
-    this.y = width / 2 - 160
+    this.data = obj.data || [];
+    this.accuracy = obj.accuracy || 0;
+    this.init();
+  }
+
+  getRatio() {
+    let devicePixelRatio = window.devicePixelRatio || 1
+    this.ratio = window.innerWidth > 700 ? devicePixelRatio : 1;
+  }
+
+  init() {
     this.outer_colors = ['#52cc8f', '#5499cc', '#ff6969', '#ffc869']
     this.inner_colors = ['#219c4b', '#22559c', '#ff2e2e', '#ff952e']
     this.start = 0;
     this.count = 0;
     this.x = 0;
     this.y = 0;
-    this.arrText = ['正   确', '半   对', '错   误', '待批改']
-    this.init();
-  }
+    this.arrText = ['正   确', '半   对', '错   误', '待批改'];
 
-  init() {
-
+    this.getRatio();
     this.dataCount();
-    this.formatParams(this.outer_colors, this.canvas.width / 2 - 260);
-    this.formatParams(this.inner_colors, this.canvas.width / 2 - 320);
-    this.drawCircle('#2c333d', 0, 1, this.canvas.width / 2 - 360);
-    this.drawText(this.outer_colors)
+    const width = window.innerWidth;
+    this.canvas.width = width;
+    this.canvas.height = width - 120;
+    this.x = width / 3;
+    this.y = width / 3;
+
+    this.formatParams(this.outer_colors, this.canvas.width / 4);
+    this.formatParams(this.inner_colors, this.canvas.width / 6);
+    this.drawCircle('#2c333d', 0, 1, this.canvas.width / 4);
     this.drawCenter()
+    this.drawText(this.outer_colors)
   }
 
   drawCenter() {
     const x = this.x;
     const y = this.y
     const ctx = this.ctx;
-    this.drawCircle('#2c333d', 0, 1, this.canvas.width / 2 - 360, x, y)
-    ctx.font = "76px Arial";
+    const r = this.canvas.width / 8;
+    this.drawCircle('#2c333d', 0, 1, r, x, y)
+
+    ctx.font = "" + (28 * this.ratio) + "px Arial";
     ctx.fillStyle = '#fff';
-    ctx.fillText('45%', x - 64, y - 10);
-    ctx.font = "46px Arial";
-    ctx.fillText('正确率', x - 60, y + 50);
+    ctx.textAlign = "center";
+    ctx.fillText(this.accuracy, x, y - 10 * this.ratio);
+
+    ctx.font = "" + (22 * this.ratio) + "px Arial";
+    ctx.fillText('正确率', x, y + 20 * this.ratio);
   }
 
   drawText(colors) {
+    const ctx = this.ctx;
     this.data.map((item, k) => {
       const color = colors[k]
       const text = this.arrText[k]
-      const text_x = this.x + 340
-      const text_y = this.y + k * 100 - 160
-      this.drawCircle(color, 0, 1, 16, text_x, text_y)
+      const text_x = this.x * 2
+      const text_y = this.y - this.canvas.width / 7 + k * 40 * this.ratio
+      this.drawCircle(color, 0, 1, 10 * this.ratio, text_x, text_y)
 
-      this.ctx.font = '36px Arial'
-      this.ctx.fillStyle = '#fff'
-      this.ctx.fillText(text + ' ' + item + '人', text_x + 40, text_y + 12)
-      console.log(text, item, text_x, text_y)
+      ctx.fillStyle = '#fff';
+      ctx.font = "" + (18 * this.ratio) + "px Arial";
+      ctx.fillText(text + ' ' + item + '人', text_x + 60 * this.ratio, text_y + 6 * this.ratio)
     })
   }
 
@@ -82,4 +100,3 @@ export default class DrawCircle {
     })
   }
 }
-
