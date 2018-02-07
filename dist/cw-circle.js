@@ -1,5 +1,9 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -40,6 +44,7 @@ var DrawCircle = function () {
       this.x = 0;
       this.y = 0;
       this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
+      this.def_Color = this.dataObj.def_Color || '#2c333d';
 
       this.getRatio();
       this.dataCount();
@@ -62,7 +67,7 @@ var DrawCircle = function () {
       var y = this.y;
       var ctx = this.ctx;
       var r = this.canvas.width / 8;
-      this.drawCircle('#2c333d', 0, 1, r, x, y);
+      this.drawCircle(this.def_Color, 0, 1, r, x, y);
 
       ctx.font = "" + 28 * this.ratio + "px Arial";
       ctx.fillStyle = '#fff';
@@ -88,7 +93,7 @@ var DrawCircle = function () {
           var text_x = _this.x * 2;
           var text_y = _this.y - _this.canvas.width / 4 + _this.space + i * _this.space * 2;
           _this.drawCircle(color, 0, 1, 8 * _this.ratio, text_x, text_y);
-          // ctx.fillStyle = '#fff';
+          ctx.fillStyle = '#fff';
           ctx.font = "" + 17 * _this.ratio + "px Arial";
           ctx.fillText(text + ' ' + item + '人', text_x + 60 * _this.ratio, text_y + 6 * _this.ratio);
         } else {
@@ -152,8 +157,4 @@ var DrawCircle = function () {
   return DrawCircle;
 }();
 
-if (typeof exports !== 'undefined') {
-  exports.default = DrawCircle;
-} else {
-  window[DrawCircle] = DrawCircle;
-}
+exports.default = DrawCircle;

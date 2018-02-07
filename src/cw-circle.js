@@ -1,4 +1,4 @@
-class DrawCircle {
+export default class DrawCircle {
   constructor(id, data, accuracy, options) {
     if (!id || !data || !accuracy) {
       alert('id, data, accuracy 为必填参数')
@@ -29,6 +29,7 @@ class DrawCircle {
     this.x = 0;
     this.y = 0;
     this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
+    this.def_Color = this.dataObj.def_Color || '#2c333d'
 
     this.getRatio();
     this.dataCount();
@@ -50,7 +51,7 @@ class DrawCircle {
     const y = this.y
     const ctx = this.ctx;
     const r = this.canvas.width / 8;
-    this.drawCircle('#2c333d', 0, 1, r, x, y)
+    this.drawCircle(this.def_Color, 0, 1, r, x, y)
 
     ctx.font = "" + (28 * this.ratio) + "px Arial";
     ctx.fillStyle = '#fff';
@@ -73,7 +74,7 @@ class DrawCircle {
         const text_x = this.x * 2
         const text_y = this.y - this.canvas.width / 4 + this.space + i * this.space * 2
         this.drawCircle(color, 0, 1, 8 * this.ratio, text_x, text_y)
-        // ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#fff';
         ctx.font = "" + (17 * this.ratio) + "px Arial";
         ctx.fillText(text + ' ' + item + '人', text_x + 60 * this.ratio, text_y + 6 * this.ratio)
       } else {
@@ -124,10 +125,4 @@ class DrawCircle {
       }
     })
   }
-}
-
-if(typeof exports !== 'undefined') {
-  exports.default = DrawCircle
-} else {
-  window[DrawCircle] = DrawCircle
 }
