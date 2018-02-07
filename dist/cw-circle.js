@@ -21,7 +21,7 @@ var DrawCircle = function () {
     this.data = data || [];
     this.accuracy = accuracy || 0;
 
-    this.dataObj = options;
+    this.dataObj = options || { outer_colors: null, inner_colors: null, center_text: null, def_Color: null, list: null };
     this.init();
   }
 
