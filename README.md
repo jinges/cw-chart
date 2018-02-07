@@ -24,6 +24,6 @@
  new DrawCircle({
     id :'#canvas',
     data: data,
-    accuracy: '49%'
+    accuracy: '45%'
 })
 ```
