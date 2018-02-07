@@ -1,15 +1,15 @@
-export default class DrawCircle {
-
-
-  constructor(obj) {
-    if (!obj.id || !obj.data || !obj.accuracy) {
-      alert('传入参数有误')
+class DrawCircle {
+  constructor(id, data, accuracy, options) {
+    if (!id || !data || !accuracy) {
+      alert('id, data, accuracy 为必填参数')
       return;
     }
-    this.canvas = document.querySelector(obj.id)
+    this.canvas = document.querySelector(id)
     this.ctx = this.canvas.getContext('2d')
-    this.data = obj.data || [];
-    this.accuracy = obj.accuracy || 0;
+    this.data = data || [];
+    this.accuracy = accuracy || 0;
+
+    this.dataObj = options;
     this.init();
   }
 
@@ -19,26 +19,29 @@ export default class DrawCircle {
   }
 
   init() {
-    this.outer_colors = ['#52cc8f', '#5499cc', '#ff6969', '#ffc869']
-    this.inner_colors = ['#219c4b', '#22559c', '#ff2e2e', '#ff952e']
+    this.outer_colors = this.dataObj.outer_colors || ['#52cc8f', '#5499cc', '#ff6969', '#ffc869', '#b66eff', '#66cb8e', '#c50e18']
+    this.inner_colors = this.dataObj.inner_colors || ['#219c4b', '#22559c', '#ff2e2e', '#ff952e', '#7e34fe', '#3b9b4a', '#99080f']
+    this.center_text = this.dataObj.center_text || '正确率';
     this.start = 0;
+    this.sum = 0;
     this.count = 0;
+    this.space = 0;
     this.x = 0;
     this.y = 0;
-    this.arrText = ['正   确', '半   对', '错   误', '待批改'];
+    this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
 
     this.getRatio();
     this.dataCount();
     const width = window.innerWidth;
     this.canvas.width = width;
-    this.canvas.height = width - 120;
+    this.canvas.height = width - 130 * this.ratio;
     this.x = width / 3;
     this.y = width / 3;
 
     this.formatParams(this.outer_colors, this.canvas.width / 4);
     this.formatParams(this.inner_colors, this.canvas.width / 6);
-    this.drawCircle('#2c333d', 0, 1, this.canvas.width / 4);
     this.drawCenter()
+    this.computeSpace()
     this.drawText(this.outer_colors)
   }
 
@@ -55,30 +58,48 @@ export default class DrawCircle {
     ctx.fillText(this.accuracy, x, y - 10 * this.ratio);
 
     ctx.font = "" + (22 * this.ratio) + "px Arial";
-    ctx.fillText('正确率', x, y + 20 * this.ratio);
+    ctx.fillText(this.center_text, x, y + 20 * this.ratio);
   }
 
   drawText(colors) {
     const ctx = this.ctx;
+    let hasZero = false;
     this.data.map((item, k) => {
-      const color = colors[k]
-      const text = this.arrText[k]
-      const text_x = this.x * 2
-      const text_y = this.y - this.canvas.width / 7 + k * 40 * this.ratio
-      this.drawCircle(color, 0, 1, 10 * this.ratio, text_x, text_y)
+      const i = hasZero ? k - 1 : k
 
-      ctx.fillStyle = '#fff';
-      ctx.font = "" + (18 * this.ratio) + "px Arial";
-      ctx.fillText(text + ' ' + item + '人', text_x + 60 * this.ratio, text_y + 6 * this.ratio)
+      if (item && item > 0) {
+        const color = colors[i] || colors[1]
+        const text = this.list[k] || '其它'
+        const text_x = this.x * 2
+        const text_y = this.y - this.canvas.width / 4 + this.space + i * this.space * 2
+        this.drawCircle(color, 0, 1, 8 * this.ratio, text_x, text_y)
+        // ctx.fillStyle = '#fff';
+        ctx.font = "" + (17 * this.ratio) + "px Arial";
+        ctx.fillText(text + ' ' + item + '人', text_x + 60 * this.ratio, text_y + 6 * this.ratio)
+      } else {
+        hasZero = true;
+      }
     })
   }
 
+  computeSpace() {
+    const h = this.canvas.width / 4 * 2;
+    this.space = h / (this.count * 2);
+  }
+
   formatParams(colors, r) {
-    this.data.map((item, i) => {
-      const color = colors[i]
-      const end = item / this.count
-      this.drawCircle(color, this.start, this.start + end, r, this.x, this.y)
-      this.start += item / this.count
+    let hasZero = false;
+
+    this.data.map((item, k) => {
+      const i = hasZero ? k - 1 : k
+      const color = colors[i] || colors[1]
+      const end = item / this.sum
+      if (item && item > 0) {
+        this.drawCircle(color, this.start, this.start + end, r, this.x, this.y)
+        this.start += item / this.sum
+      } else {
+        hasZero = true
+      }
     })
   }
 
@@ -95,8 +116,18 @@ export default class DrawCircle {
   }
 
   dataCount() {
+    this.data = this.data.slice(0, this.list.length)
     this.data.map(item => {
-      this.count += item
+      this.sum += item
+      if (item && item > 0) {
+        this.count++
+      }
     })
   }
+}
+
+if(typeof exports !== 'undefined') {
+  exports.default = DrawCircle
+} else {
+  window[DrawCircle] = DrawCircle
 }

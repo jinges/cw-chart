@@ -1,1 +1,1 @@
-module.exports = require('./lib/cw-circle')
+module.exports = require('./dist/cw-circle')
