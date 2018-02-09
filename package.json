@@ -6,11 +6,8 @@
   "scripts": {
     "build": "babel src -d dist"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jinges/cw-chart.git"
-  },
-  "author": "",
+  "repository": "git+https://github.com/jinges/cw-chart.git",
+  "author": "jinges <jinges2012@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jinges/cw-chart/issues"

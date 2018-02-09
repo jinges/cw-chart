@@ -1,0 +1,21 @@
+{
+  "name": "cw-circle",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "jinges <jinges2012@gmail.com>"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "canvas"
+  ],
+  "homepage": "https://github.com/jinges/cw-chart",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
