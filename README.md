@@ -4,6 +4,9 @@
 
 用于统计学生做题情况，分析正确率，错误率
 
+现在网页中写入一个  ``
+ <canvas id="canvas"></canvas>`` 然后再按照下面的步骤操作
+
 ![示例图](example.png '示例图')
 
 
@@ -62,4 +65,21 @@
   new DrawCircle('#canvas', data, '49%', {
     list: list
   })
+```
+
+浏览器
+---
+
+在浏览器里可以直接引入js库
+
+
+```javascript
+  <script src="./../dist/cw_circle.js"></script>
+  <script>
+    const data = [15, 0, 43, 40, 15, 29, 23, 50, 34, 45, 56]
+    const list = ['正确', '半对', '错误', '待批改', '异常']
+    new DrawCircle.default('#canvas', data, '49%', {
+      list: list
+    })
+  </script>
 ```

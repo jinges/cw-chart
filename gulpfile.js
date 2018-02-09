@@ -2,12 +2,21 @@ const gulp = require('gulp');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
+const del = require('del');
 
-gulp.task('default', () =>
-  gulp.src('src/cw-circle.js')
+gulp.task('clean', function (cb) {
+  del('dist', cb);
+});
+
+gulp.task('build', () =>
+  gulp.src('src/cw_circle.js')
+    .pipe(rename("DrawCircle.js"))
+    .pipe(gulp.dest('dist'))
     .pipe(babel({
-      presets: ['env']
+      presets: [['es2015', {"modules": false}], 'stage-2'],
+      plugins: ["transform-es2015-modules-umd"]
     }))
+    .pipe(rename("cw_circle.js"))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -15,3 +24,7 @@ gulp.task('default', () =>
     }))
     .pipe(gulp.dest('dist'))
 );
+
+gulp.task('default', ['clean', 'build'], ()=>{
+  console.log('success!')
+})

@@ -8,11 +8,11 @@
 </head>
 <body>
   <canvas id="canvas"></canvas>
-  <script src="./../dist/cw-circle.js"></script>
+  <script src="./../dist/cw_circle.js"></script>
 <script>
   const data = [15, 0, 43, 40, 15, 29, 23, 50, 34, 45, 56]
   const list = ['正确', '半对', '错误', '待批改', '异常']
-  new DrawCircle('#canvas', data, '49%', {
+  new DrawCircle.default('#canvas', data, '49%', {
     list: list
   })
   </script>
