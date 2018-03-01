@@ -9,7 +9,13 @@ export default class DrawCircle {
     this.data = data || [];
     this.accuracy = accuracy || 0;
 
-    this.dataObj = options || {outer_colors: null, inner_colors: null, center_text: null, def_Color: null, list: null};
+    this.dataObj = options || {
+      outer_colors: null,
+      inner_colors: null,
+      center_text: null,
+      def_Color: null,
+      list: null
+    };
     this.init();
   }
 
@@ -26,6 +32,7 @@ export default class DrawCircle {
     this.sum = 0;
     this.count = 0;
     this.space = 0;
+    this.top = 0;
     this.x = 0;
     this.y = 0;
     this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
@@ -67,12 +74,12 @@ export default class DrawCircle {
     let hasZero = false;
     this.data.map((item, k) => {
       const i = hasZero ? k - 1 : k
-
       if (item && item > 0) {
-        const color = colors[i] || colors[1]
+        const color = colors[k] || colors[1]
         const text = this.list[k] || '其它'
         const text_x = this.x * 2
-        const text_y = this.y - this.canvas.width / 4 + this.space + i * this.space * 2
+        const text_y = this.y - this.canvas.width / 4 + this.space + i * this.space * 2 + this.top
+        console.log(text_y)
         this.drawCircle(color, 0, 1, 8 * this.ratio, text_x, text_y)
         ctx.fillStyle = '#fff';
         ctx.font = "" + (17 * this.ratio) + "px Arial";
@@ -86,14 +93,18 @@ export default class DrawCircle {
   computeSpace() {
     const h = this.canvas.width / 4 * 2;
     this.space = h / (this.count * 2);
+    console.log(this.space)
+    if(this.space > 40) {
+      this.space = 25;
+      this.top = 40;
+    }
   }
 
   formatParams(colors, r) {
     let hasZero = false;
 
     this.data.map((item, k) => {
-      const i = hasZero ? k - 1 : k
-      const color = colors[i] || colors[1]
+      const color = colors[k] || colors[1]
       const end = item / this.sum
       if (item && item > 0) {
         this.drawCircle(color, this.start, this.start + end, r, this.x, this.y)

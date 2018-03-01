@@ -67,7 +67,13 @@
         this.data = data || [];
         this.accuracy = accuracy || 0;
 
-        this.dataObj = options || { outer_colors: null, inner_colors: null, center_text: null, def_Color: null, list: null };
+        this.dataObj = options || {
+          outer_colors: null,
+          inner_colors: null,
+          center_text: null,
+          def_Color: null,
+          list: null
+        };
         this.init();
       }
 
@@ -87,6 +93,7 @@
           this.sum = 0;
           this.count = 0;
           this.space = 0;
+          this.top = 0;
           this.x = 0;
           this.y = 0;
           this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
@@ -132,12 +139,12 @@
           var hasZero = false;
           this.data.map(function (item, k) {
             var i = hasZero ? k - 1 : k;
-
             if (item && item > 0) {
-              var color = colors[i] || colors[1];
+              var color = colors[k] || colors[1];
               var text = _this.list[k] || '其它';
               var text_x = _this.x * 2;
-              var text_y = _this.y - _this.canvas.width / 4 + _this.space + i * _this.space * 2;
+              var text_y = _this.y - _this.canvas.width / 4 + _this.space + i * _this.space * 2 + _this.top;
+              console.log(text_y);
               _this.drawCircle(color, 0, 1, 8 * _this.ratio, text_x, text_y);
               ctx.fillStyle = '#fff';
               ctx.font = "" + 17 * _this.ratio + "px Arial";
@@ -152,6 +159,11 @@
         value: function computeSpace() {
           var h = this.canvas.width / 4 * 2;
           this.space = h / (this.count * 2);
+          console.log(this.space);
+          if (this.space > 40) {
+            this.space = 25;
+            this.top = 40;
+          }
         }
       }, {
         key: 'formatParams',
@@ -161,8 +173,7 @@
           var hasZero = false;
 
           this.data.map(function (item, k) {
-            var i = hasZero ? k - 1 : k;
-            var color = colors[i] || colors[1];
+            var color = colors[k] || colors[1];
             var end = item / _this2.sum;
             if (item && item > 0) {
               _this2.drawCircle(color, _this2.start, _this2.start + end, r, _this2.x, _this2.y);
