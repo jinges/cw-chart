@@ -1,1 +1,1 @@
-module.exports = require('./dist/DrawCircle')
+module.exports = require('./dist/cw_circle')
