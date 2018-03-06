@@ -145,21 +145,18 @@
           var _this = this;
 
           var ctx = this.ctx;
-          var hasZero = false;
           ctx.textAlign = "left";
+          var index = 0;
           this.data.map(function (item, k) {
-            var i = hasZero ? k - 1 : k;
             if (item && item > 0) {
               var color = colors[k] || colors[1];
               var text = _this.list[k] || '其它';
               var text_x = _this.x * 2;
-              var text_y = _this.y - _this.canvas.width / 6 + _this.space * i - 2 * _this.ratio;
+              var text_y = _this.y - _this.canvas.width / 6 + _this.space * index++ - 2 * _this.ratio;
               _this.drawCircle(color, 0, 1, 3 * _this.ratio, text_x, text_y);
               ctx.fillStyle = '#fff';
               ctx.font = "" + 6 * _this.ratio + "px Arial";
               ctx.fillText(text + '： ' + item + '人', text_x + 5 * _this.ratio, text_y + 2 * _this.ratio, 100);
-            } else {
-              hasZero = true;
             }
           });
         }
@@ -168,7 +165,6 @@
         value: function formatParams(colors, r) {
           var _this2 = this;
 
-          console.log(this.data);
           this.data.map(function (item, k) {
             var color = colors[k] || colors[1];
             var end = item / _this2.sum;
@@ -201,11 +197,8 @@
             _this3.sum += item;
             if (item && item > 0) {
               _this3.count++;
-              newArr.push(item);
             }
           });
-
-          this.data = newArr;
         }
       }]);
 

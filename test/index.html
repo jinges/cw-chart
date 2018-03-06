@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" name="viewport">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
@@ -19,9 +20,9 @@
   <canvas id="canvas"></canvas>
   <script src="./../dist/cw_circle.js"></script>
 <script>
-  const data = [0,0, 00, 50, 0]
+  const data = [0, 0, 0, 20]
   const list = ['正确', '半  对', '错 误', '待批改', '异常', '其它']
-  new DrawCircle.default('#canvas', data, '1%', {
+  new DrawCircle.default('#canvas', data, '15%', {
     list: list
   })
   </script>

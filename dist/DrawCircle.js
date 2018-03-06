@@ -80,21 +80,18 @@ export default class DrawCircle {
 
   drawText(colors) {
     const ctx = this.ctx;
-    let hasZero = false;
     ctx.textAlign = "left";
+    let index = 0;
     this.data.map((item, k) => {
-      const i = hasZero ? k - 1 : k
       if (item && item > 0) {
         const color = colors[k] || colors[1]
         const text = this.list[k] || '其它'
         const text_x = this.x * 2
-        const text_y = this.y - this.canvas.width / 6 + this.space * i - 2 * this.ratio
+        const text_y = this.y - this.canvas.width / 6 + this.space * index++ - 2 * this.ratio
         this.drawCircle(color, 0, 1, 3 * this.ratio, text_x, text_y)
         ctx.fillStyle = '#fff';
         ctx.font = "" + (6 * this.ratio) + "px Arial";
         ctx.fillText(text + '： ' + item + '人', text_x + 5 * this.ratio, text_y + 2 * this.ratio, 100)
-      } else {
-        hasZero = true;
       }
     })
   }
@@ -109,7 +106,6 @@ export default class DrawCircle {
   // }
 
   formatParams(colors, r) {
-    console.log(this.data)
     this.data.map((item, k) => {
       const color = colors[k] || colors[1]
       const end = item / this.sum
@@ -138,10 +134,7 @@ export default class DrawCircle {
       this.sum += item
       if (item && item > 0) {
         this.count++
-        newArr.push(item)
       }
     })
-
-    this.data = newArr;
   }
 }
