@@ -81,7 +81,16 @@
         key: 'getRatio',
         value: function getRatio() {
           var devicePixelRatio = window.devicePixelRatio || 1;
-          this.ratio = window.innerWidth > 700 ? devicePixelRatio : 1;
+          console.log(devicePixelRatio);
+          this.ratio = devicePixelRatio * 0.9;
+          var w = window.innerWidth;
+          if (w <= 320) {
+            this.ratio = devicePixelRatio * 1.2;
+          } else if (w <= 400 && devicePixelRatio < 3) {
+            this.ratio = devicePixelRatio * 1.4;
+          } else if (w >= 600) {
+            this.ratio = devicePixelRatio * 2.4;
+          }
         }
       }, {
         key: 'init',
@@ -103,8 +112,8 @@
           this.dataCount();
           var width = window.innerWidth;
           this.canvas.width = width;
-          this.canvas.height = width - 130 * this.ratio;
-          this.x = width / 3;
+          this.canvas.height = width - 130;
+          this.x = width / 3 - 10;
           this.y = width / 3;
 
           this.formatParams(this.outer_colors, this.canvas.width / 4);
@@ -122,13 +131,13 @@
           var r = this.canvas.width / 8;
           this.drawCircle(this.def_Color, 0, 1, r, x, y);
 
-          ctx.font = "" + 28 * this.ratio + "px Arial";
+          ctx.font = "" + 11 * this.ratio + "px Arial";
           ctx.fillStyle = '#fff';
           ctx.textAlign = "center";
-          ctx.fillText(this.accuracy, x, y - 10 * this.ratio);
+          ctx.fillText(this.accuracy, x, y - 2 * this.ratio);
 
-          ctx.font = "" + 22 * this.ratio + "px Arial";
-          ctx.fillText(this.center_text, x, y + 20 * this.ratio);
+          ctx.font = "" + 7 * this.ratio + "px Arial";
+          ctx.fillText(this.center_text, x, y + 8 * this.ratio);
         }
       }, {
         key: 'drawText',
@@ -144,11 +153,10 @@
               var text = _this.list[k] || '其它';
               var text_x = _this.x * 2;
               var text_y = _this.y - _this.canvas.width / 4 + _this.space + i * _this.space * 2 + _this.top;
-              console.log(text_y);
-              _this.drawCircle(color, 0, 1, 8 * _this.ratio, text_x, text_y);
+              _this.drawCircle(color, 0, 1, 4 * _this.ratio, text_x, text_y);
               ctx.fillStyle = '#fff';
-              ctx.font = "" + 17 * _this.ratio + "px Arial";
-              ctx.fillText(text + ' ' + item + '人', text_x + 60 * _this.ratio, text_y + 6 * _this.ratio);
+              ctx.font = "" + 6 * _this.ratio + "px Arial";
+              ctx.fillText(text + ' ' + item + '人', text_x + 24 * _this.ratio, text_y + 2 * _this.ratio);
             } else {
               hasZero = true;
             }
@@ -159,7 +167,6 @@
         value: function computeSpace() {
           var h = this.canvas.width / 4 * 2;
           this.space = h / (this.count * 2);
-          console.log(this.space);
           if (this.space > 40) {
             this.space = 25;
             this.top = 40;
