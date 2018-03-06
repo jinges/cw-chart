@@ -105,11 +105,12 @@
           this.top = 0;
           this.x = 0;
           this.y = 0;
+          this.space = 30;
           this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
           this.def_Color = this.dataObj.def_Color || '#2c333d';
 
-          this.getRatio();
           this.dataCount();
+          this.getRatio();
           var width = window.innerWidth;
           this.canvas.width = width;
           this.canvas.height = width - 130;
@@ -119,7 +120,6 @@
           this.formatParams(this.outer_colors, this.canvas.width / 4);
           this.formatParams(this.inner_colors, this.canvas.width / 6);
           this.drawCenter();
-          this.computeSpace();
           this.drawText(this.outer_colors);
         }
       }, {
@@ -146,48 +146,35 @@
 
           var ctx = this.ctx;
           var hasZero = false;
+          ctx.textAlign = "left";
           this.data.map(function (item, k) {
             var i = hasZero ? k - 1 : k;
             if (item && item > 0) {
               var color = colors[k] || colors[1];
               var text = _this.list[k] || '其它';
               var text_x = _this.x * 2;
-              var text_y = _this.y - _this.canvas.width / 4 + _this.space + i * _this.space * 2 + _this.top;
-              _this.drawCircle(color, 0, 1, 4 * _this.ratio, text_x, text_y);
+              var text_y = _this.y - _this.canvas.width / 6 + _this.space * i - 2 * _this.ratio;
+              _this.drawCircle(color, 0, 1, 3 * _this.ratio, text_x, text_y);
               ctx.fillStyle = '#fff';
               ctx.font = "" + 6 * _this.ratio + "px Arial";
-              ctx.fillText(text + ' ' + item + '人', text_x + 24 * _this.ratio, text_y + 2 * _this.ratio);
+              ctx.fillText(text + '： ' + item + '人', text_x + 5 * _this.ratio, text_y + 2 * _this.ratio, 100);
             } else {
               hasZero = true;
             }
           });
         }
       }, {
-        key: 'computeSpace',
-        value: function computeSpace() {
-          var h = this.canvas.width / 4 * 2;
-          this.space = h / (this.count * 2);
-          if (this.space > 40) {
-            this.space = 25;
-            this.top = 40;
-          }
-        }
-      }, {
         key: 'formatParams',
         value: function formatParams(colors, r) {
           var _this2 = this;
 
-          var hasZero = false;
-
+          console.log(this.data);
           this.data.map(function (item, k) {
             var color = colors[k] || colors[1];
             var end = item / _this2.sum;
-            if (item && item > 0) {
-              _this2.drawCircle(color, _this2.start, _this2.start + end, r, _this2.x, _this2.y);
-              _this2.start += item / _this2.sum;
-            } else {
-              hasZero = true;
-            }
+
+            _this2.drawCircle(color, _this2.start, _this2.start + end, r, _this2.x, _this2.y);
+            _this2.start += item / _this2.sum;
           });
         }
       }, {
@@ -208,13 +195,17 @@
         value: function dataCount() {
           var _this3 = this;
 
+          var newArr = [];
           this.data = this.data.slice(0, this.list.length);
           this.data.map(function (item) {
             _this3.sum += item;
             if (item && item > 0) {
               _this3.count++;
+              newArr.push(item);
             }
           });
+
+          this.data = newArr;
         }
       }]);
 

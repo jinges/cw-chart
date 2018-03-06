@@ -44,11 +44,12 @@ export default class DrawCircle {
     this.top = 0;
     this.x = 0;
     this.y = 0;
+    this.space = 30;
     this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
     this.def_Color = this.dataObj.def_Color || '#2c333d'
 
-    this.getRatio();
     this.dataCount();
+    this.getRatio();
     const width = window.innerWidth;
     this.canvas.width = width;
     this.canvas.height = width - 130 ;
@@ -58,7 +59,6 @@ export default class DrawCircle {
     this.formatParams(this.outer_colors, this.canvas.width / 4);
     this.formatParams(this.inner_colors, this.canvas.width / 6);
     this.drawCenter()
-    this.computeSpace()
     this.drawText(this.outer_colors)
   }
 
@@ -81,44 +81,41 @@ export default class DrawCircle {
   drawText(colors) {
     const ctx = this.ctx;
     let hasZero = false;
+    ctx.textAlign = "left";
     this.data.map((item, k) => {
       const i = hasZero ? k - 1 : k
       if (item && item > 0) {
         const color = colors[k] || colors[1]
         const text = this.list[k] || '其它'
         const text_x = this.x * 2
-        const text_y = this.y - this.canvas.width / 4 + this.space + i * this.space * 2 + this.top
-        this.drawCircle(color, 0, 1, 4 * this.ratio, text_x, text_y)
+        const text_y = this.y - this.canvas.width / 6 + this.space * i - 2 * this.ratio
+        this.drawCircle(color, 0, 1, 3 * this.ratio, text_x, text_y)
         ctx.fillStyle = '#fff';
         ctx.font = "" + (6 * this.ratio) + "px Arial";
-        ctx.fillText(text + ' ' + item + '人', text_x + 24 * this.ratio, text_y + 2 * this.ratio)
+        ctx.fillText(text + '： ' + item + '人', text_x + 5 * this.ratio, text_y + 2 * this.ratio, 100)
       } else {
         hasZero = true;
       }
     })
   }
 
-  computeSpace() {
-    const h = this.canvas.width / 4 * 2;
-    this.space = h / (this.count * 2);
-    if(this.space > 40) {
-      this.space = 25;
-      this.top = 40;
-    }
-  }
+  // computeSpace() {
+  //   const h = this.canvas.width / 4 * 2;
+  //   this.space = h / this.count;
+  //   // if(this.space > 40) {
+  //   //   this.space = 25;
+  //   //   this.top = 40;
+  //   // }
+  // }
 
   formatParams(colors, r) {
-    let hasZero = false;
-
+    console.log(this.data)
     this.data.map((item, k) => {
       const color = colors[k] || colors[1]
       const end = item / this.sum
-      if (item && item > 0) {
-        this.drawCircle(color, this.start, this.start + end, r, this.x, this.y)
-        this.start += item / this.sum
-      } else {
-        hasZero = true
-      }
+
+      this.drawCircle(color, this.start, this.start + end, r, this.x, this.y)
+      this.start += item / this.sum
     })
   }
 
@@ -135,12 +132,16 @@ export default class DrawCircle {
   }
 
   dataCount() {
+    const newArr = [];
     this.data = this.data.slice(0, this.list.length)
     this.data.map(item => {
       this.sum += item
       if (item && item > 0) {
         this.count++
+        newArr.push(item)
       }
     })
+
+    this.data = newArr;
   }
 }

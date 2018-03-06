@@ -3,6 +3,8 @@ const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const del = require('del');
+const connect = require('gulp-connect');
+const livereload = require('gulp-livereload');
 
 gulp.task('clean', function (cb) {
   del('dist', cb);
@@ -24,6 +26,14 @@ gulp.task('build', () =>
     }))
     .pipe(gulp.dest('dist'))
 );
+
+gulp.task('connect', function () {
+  connect.server({
+    livereload: true,
+    port: 80
+  });
+  livereload.listen()
+});
 
 gulp.task('default', ['clean', 'build'], ()=>{
   console.log('success!')
