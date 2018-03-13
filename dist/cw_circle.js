@@ -80,17 +80,10 @@
       _createClass(DrawCircle, [{
         key: 'getRatio',
         value: function getRatio() {
+          var ctx = this.ctx;
           var devicePixelRatio = window.devicePixelRatio || 1;
-          console.log(devicePixelRatio);
-          this.ratio = devicePixelRatio * 0.9;
-          var w = window.innerWidth;
-          if (w <= 320) {
-            this.ratio = devicePixelRatio * 1.2;
-          } else if (w <= 400 && devicePixelRatio < 3) {
-            this.ratio = devicePixelRatio * 1.4;
-          } else if (w >= 600) {
-            this.ratio = devicePixelRatio * 2.4;
-          }
+          var backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+          this.ratio = devicePixelRatio / backingStoreRatio;
         }
       }, {
         key: 'init',
@@ -111,11 +104,12 @@
 
           this.dataCount();
           this.getRatio();
-          var width = window.innerWidth;
+          var width = window.innerWidth * this.ratio;
           this.canvas.width = width;
-          this.canvas.height = width - 130;
-          this.x = width / 3 - 10;
+          this.canvas.height = width - 130 * this.ratio;
+          this.x = width / 3 - 10 * this.ratio;
           this.y = width / 3;
+          console.log(this.canvas.width, this.canvas.height, this.x, this.y);
 
           this.formatParams(this.outer_colors, this.canvas.width / 4);
           this.formatParams(this.inner_colors, this.canvas.width / 6);
@@ -131,13 +125,13 @@
           var r = this.canvas.width / 8;
           this.drawCircle(this.def_Color, 0, 1, r, x, y);
 
-          ctx.font = "" + 11 * this.ratio + "px Arial";
+          ctx.font = "" + 24 * this.ratio + "px Arial";
           ctx.fillStyle = '#fff';
           ctx.textAlign = "center";
-          ctx.fillText(this.accuracy, x, y - 2 * this.ratio);
+          ctx.fillText(this.accuracy, x, y - 0 * this.ratio);
 
-          ctx.font = "" + 7 * this.ratio + "px Arial";
-          ctx.fillText(this.center_text, x, y + 8 * this.ratio);
+          ctx.font = "" + 16 * this.ratio + "px Arial";
+          ctx.fillText(this.center_text, x, y + 20 * this.ratio);
         }
       }, {
         key: 'drawText',
@@ -152,11 +146,11 @@
               var color = colors[k] || colors[1];
               var text = _this.list[k] || '其它';
               var text_x = _this.x * 2;
-              var text_y = _this.y - _this.canvas.width / 6 + _this.space * index++ - 2 * _this.ratio;
-              _this.drawCircle(color, 0, 1, 3 * _this.ratio, text_x, text_y);
+              var text_y = _this.y - _this.canvas.width / 6 + _this.space * _this.ratio * index++ - 2 * _this.ratio;
+              _this.drawCircle(color, 0, 1, 8 * _this.ratio, text_x, text_y);
               ctx.fillStyle = '#fff';
-              ctx.font = "" + 6 * _this.ratio + "px Arial";
-              ctx.fillText(text + '： ' + item + '人', text_x + 5 * _this.ratio, text_y + 2 * _this.ratio, 100);
+              ctx.font = "" + 14 * _this.ratio + "px Arial";
+              ctx.fillText(text + '： ' + item + '人', text_x + 20 * _this.ratio, text_y + 4 * _this.ratio, 100 * _this.ratio);
             }
           });
         }

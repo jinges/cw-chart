@@ -12,6 +12,7 @@
       padding: 0;
     }
     canvas{
+      width: 100%;
       background: #000;
     }
   </style>
@@ -20,9 +21,9 @@
   <canvas id="canvas"></canvas>
   <script src="./../dist/cw_circle.js"></script>
 <script>
-  const data = [0, 0, 0, 20]
-  const list = ['正确', '半  对', '错 误', '待批改', '异常', '其它']
-  new DrawCircle.default('#canvas', data, '15%', {
+  const data = [20, 35, 50, 20]
+  const list = ['正   确', '半   对', '错  误', '待批改', '异常', '其它']
+  new DrawCircle.default('#canvas', data, '15.58%', {
     list: list
   })
   </script>

@@ -13,7 +13,7 @@ gulp.task('clean', function (cb) {
 gulp.task('build', () =>
   gulp.src('src/cw_circle.js')
     .pipe(rename("DrawCircle.js"))
-    .pipe(gulp.dest('dist'))
+    // .pipe(gulp.dest('dist'))
     .pipe(babel({
       presets: [['es2015', {"modules": false}], 'stage-2'],
       plugins: ["transform-es2015-modules-umd"]
@@ -35,6 +35,11 @@ gulp.task('connect', function () {
   livereload.listen()
 });
 
-gulp.task('default', ['clean', 'build'], ()=>{
+gulp.task('watch', function () {
+  gulp.watch('src/cw_circle.js', ['build']);
+  livereload.listen();
+});
+
+gulp.task('default', ['clean', 'build', 'connect', 'watch'], () => {
   console.log('success!')
 })

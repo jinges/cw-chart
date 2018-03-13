@@ -20,17 +20,14 @@ export default class DrawCircle {
   }
 
   getRatio() {
-    let devicePixelRatio = window.devicePixelRatio || 1
-    console.log(devicePixelRatio)
-    this.ratio = devicePixelRatio * 0.9;
-    const w = window.innerWidth;
-    if(w <= 320) {
-      this.ratio = devicePixelRatio * 1.2
-    } else if (w <= 400 && devicePixelRatio < 3) {
-      this.ratio = devicePixelRatio * 1.4
-    } else if (w >= 600) {
-      this.ratio = devicePixelRatio * 2.4
-    }
+    const ctx = this.ctx;
+    var devicePixelRatio = window.devicePixelRatio || 1;
+    var backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+      ctx.mozBackingStorePixelRatio ||
+      ctx.msBackingStorePixelRatio ||
+      ctx.oBackingStorePixelRatio ||
+      ctx.backingStorePixelRatio || 1;
+    this.ratio = devicePixelRatio / backingStoreRatio;
   }
 
   init() {
@@ -50,11 +47,12 @@ export default class DrawCircle {
 
     this.dataCount();
     this.getRatio();
-    const width = window.innerWidth;
+    const width = window.innerWidth * this.ratio;
     this.canvas.width = width;
-    this.canvas.height = width - 130 ;
-    this.x = width / 3 - 10;
+    this.canvas.height = width - 130 * this.ratio ;
+    this.x = width / 3 - 10 * this.ratio;
     this.y = width / 3;
+    console.log(this.canvas.width, this.canvas.height, this.x, this.y)
 
     this.formatParams(this.outer_colors, this.canvas.width / 4);
     this.formatParams(this.inner_colors, this.canvas.width / 6);
@@ -69,13 +67,13 @@ export default class DrawCircle {
     const r = this.canvas.width / 8;
     this.drawCircle(this.def_Color, 0, 1, r, x, y)
 
-    ctx.font = "" + (11 * this.ratio) + "px Arial";
+    ctx.font = "" + (24 * this.ratio) + "px Arial";
     ctx.fillStyle = '#fff';
     ctx.textAlign = "center";
-    ctx.fillText(this.accuracy, x, y - 2 * this.ratio);
+    ctx.fillText(this.accuracy, x, y - 0 * this.ratio);
 
-    ctx.font = "" + (7 * this.ratio) + "px Arial";
-    ctx.fillText(this.center_text, x, y + 8 * this.ratio);
+    ctx.font = "" + (16 * this.ratio) + "px Arial";
+    ctx.fillText(this.center_text, x, y + 20 * this.ratio);
   }
 
   drawText(colors) {
@@ -86,24 +84,15 @@ export default class DrawCircle {
       if (item && item > 0) {
         const color = colors[k] || colors[1]
         const text = this.list[k] || '其它'
-        const text_x = this.x * 2
-        const text_y = this.y - this.canvas.width / 6 + this.space * index++ - 2 * this.ratio
-        this.drawCircle(color, 0, 1, 3 * this.ratio, text_x, text_y)
+        const text_x = this.x * 2;
+        const text_y = this.y - this.canvas.width / 6 + this.space * this.ratio * index++ - 2 * this.ratio;
+        this.drawCircle(color, 0, 1, 8 * this.ratio, text_x, text_y)
         ctx.fillStyle = '#fff';
-        ctx.font = "" + (6 * this.ratio) + "px Arial";
-        ctx.fillText(text + '： ' + item + '人', text_x + 5 * this.ratio, text_y + 2 * this.ratio, 100)
+        ctx.font = "" + (14 * this.ratio) + "px Arial";
+        ctx.fillText(text + '： ' + item + '人', text_x + 20 * this.ratio, text_y + 4 * this.ratio, 100 * this.ratio)
       }
     })
   }
-
-  // computeSpace() {
-  //   const h = this.canvas.width / 4 * 2;
-  //   this.space = h / this.count;
-  //   // if(this.space > 40) {
-  //   //   this.space = 25;
-  //   //   this.top = 40;
-  //   // }
-  // }
 
   formatParams(colors, r) {
     this.data.map((item, k) => {
