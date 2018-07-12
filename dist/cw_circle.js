@@ -30,6 +30,21 @@
       value: true
     });
 
+    function _defineProperty(obj, key, value) {
+      if (key in obj) {
+        Object.defineProperty(obj, key, {
+          value: value,
+          enumerable: true,
+          configurable: true,
+          writable: true
+        });
+      } else {
+        obj[key] = value;
+      }
+
+      return obj;
+    }
+
     function _classCallCheck(instance, Constructor) {
       if (!(instance instanceof Constructor)) {
         throw new TypeError("Cannot call a class as a function");
@@ -56,6 +71,8 @@
 
     var DrawCircle = function () {
       function DrawCircle(id, data, accuracy, options) {
+        var _default_options;
+
         _classCallCheck(this, DrawCircle);
 
         if (!id || !data || !accuracy) {
@@ -67,13 +84,18 @@
         this.data = data || [];
         this.accuracy = accuracy || 0;
 
-        this.dataObj = options || {
-          outer_colors: null,
-          inner_colors: null,
-          center_text: null,
-          def_Color: null,
-          list: null
-        };
+        var default_options = (_default_options = {
+          start: 0,
+          sum: 0,
+          count: 0,
+          space: 0,
+          top: 0,
+          w: window.innerWidth > 400 ? 400 : window.innerWidth,
+          x: 0,
+          y: 0
+        }, _defineProperty(_default_options, 'space', 30), _defineProperty(_default_options, 'outer_colors', ['#FFC869', '#5499CC', '#FF6969', '#52CC8F', '#b66eff', '#c50e18']), _defineProperty(_default_options, 'center_title', '正确率'), _defineProperty(_default_options, 'def_color', '#333'), _defineProperty(_default_options, 'text_color', '#333'), _defineProperty(_default_options, 'list', ['正   确', '半   对', '错   误', '待批改', '其它']), _default_options);
+        Object.assign(this, default_options, options);
+        console.log(this);
         this.init();
       }
 
@@ -88,31 +110,16 @@
       }, {
         key: 'init',
         value: function init() {
-          this.outer_colors = this.dataObj.outer_colors || ['#52cc8f', '#5499cc', '#ff6969', '#ffc869', '#b66eff', '#66cb8e', '#c50e18'];
-          this.inner_colors = this.dataObj.inner_colors || ['#219c4b', '#22559c', '#ff2e2e', '#ff952e', '#7e34fe', '#3b9b4a', '#99080f'];
-          this.center_text = this.dataObj.center_text || '正确率';
-          this.start = 0;
-          this.sum = 0;
-          this.count = 0;
-          this.space = 0;
-          this.top = 0;
-          this.x = 0;
-          this.y = 0;
-          this.space = 30;
-          this.list = this.dataObj.list || ['正   确', '半   对', '错   误', '待批改', '其它'];
-          this.def_Color = this.dataObj.def_Color || '#2c333d';
-
           this.dataCount();
           this.getRatio();
-          var width = window.innerWidth * this.ratio;
+          var width = this.w * this.ratio;
           this.canvas.width = width;
           this.canvas.height = width - 130 * this.ratio;
           this.x = width / 3 - 10 * this.ratio;
           this.y = width / 3;
-          console.log(this.canvas.width, this.canvas.height, this.x, this.y);
 
-          this.formatParams(this.outer_colors, this.canvas.width / 4);
-          this.formatParams(this.inner_colors, this.canvas.width / 6);
+          this.outCircle(this.outer_colors, this.canvas.width / 4);
+          this.drawCircle('rgba(0,0,0,.1)', 0, 1, this.canvas.width / 6, this.x, this.y);
           this.drawCenter();
           this.drawText(this.outer_colors);
         }
@@ -122,16 +129,16 @@
           var x = this.x;
           var y = this.y;
           var ctx = this.ctx;
-          var r = this.canvas.width / 8;
-          this.drawCircle(this.def_Color, 0, 1, r, x, y);
-
+          var r = this.canvas.width / 7;
+          ctx.globalCompositeOperation = "xor";
+          this.drawCircle('#fff', 0, 1, r, x, y);
           ctx.font = "" + 24 * this.ratio + "px Arial";
-          ctx.fillStyle = '#fff';
+          ctx.fillStyle = this.def_color;
           ctx.textAlign = "center";
           ctx.fillText(this.accuracy, x, y - 0 * this.ratio);
 
           ctx.font = "" + 16 * this.ratio + "px Arial";
-          ctx.fillText(this.center_text, x, y + 20 * this.ratio);
+          ctx.fillText(this.center_title, x, y + 20 * this.ratio);
         }
       }, {
         key: 'drawText',
@@ -148,15 +155,15 @@
               var text_x = _this.x * 2;
               var text_y = _this.y - _this.canvas.width / 6 + _this.space * _this.ratio * index++ - 2 * _this.ratio;
               _this.drawCircle(color, 0, 1, 8 * _this.ratio, text_x, text_y);
-              ctx.fillStyle = '#fff';
+              ctx.fillStyle = _this.text_color;
               ctx.font = "" + 14 * _this.ratio + "px Arial";
               ctx.fillText(text + '： ' + item + '人', text_x + 20 * _this.ratio, text_y + 4 * _this.ratio, 100 * _this.ratio);
             }
           });
         }
       }, {
-        key: 'formatParams',
-        value: function formatParams(colors, r) {
+        key: 'outCircle',
+        value: function outCircle(colors, r) {
           var _this2 = this;
 
           this.data.map(function (item, k) {

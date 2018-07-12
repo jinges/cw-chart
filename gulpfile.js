@@ -30,6 +30,7 @@ gulp.task('build', () =>
 gulp.task('connect', function () {
   connect.server({
     livereload: true,
+    host: '192.168.18.239',
     port: 80
   });
   livereload.listen()

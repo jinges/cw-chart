@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" name="viewport">
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" name="viewport">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    *{
+    * {
       margin: 0;
       padding: 0;
+      /* background: #000; */
     }
-    canvas{
+
+    #box {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    canvas {
       width: 100%;
-      background: #000;
     }
   </style>
 </head>
+
 <body>
-  <canvas id="canvas"></canvas>
+<div id="box">
+<canvas id="canvas"></canvas>
+<canvas id="canvas2"></canvas>
+  </div>
   <script src="./../dist/cw_circle.js"></script>
-<script>
-  const data = [20, 35, 50, 20]
-  const list = ['正   确', '半   对', '错  误', '待批改', '异常', '其它']
-  new DrawCircle.default('#canvas', data, '15.58%', {
-    list: list
-  })
+  <script>
+    const data = [20, 35, 50, 90,78,34,345,99]
+    const list = ['正   确', '半   对', '错   误', '待批改', '异常', '其它']
+    new DrawCircle.default('#canvas', data, '95.58%')
+    new DrawCircle.default('#canvas2', data, '35.58%')
   </script>
 </body>
+
 </html>
